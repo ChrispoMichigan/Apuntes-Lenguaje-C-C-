@@ -3,7 +3,7 @@
 
 int main() {
     int gd = DETECT, gm;
-    initgraph(&gd, &gm, (char*)"C:\\TDM-GCC-64\\BGI");
+    initgraph(&gd, &gm, (char*)"");
 
     circle(200, 200, 50);
     getch();
