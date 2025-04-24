@@ -2,6 +2,7 @@
 #include <stdlib.h>
 
 int main() {
+    //Hola un cambio
     // Open two files to be merged
     FILE *fp1 = fopen("file1.txt", "r");
     // Abre el primer archivo "file1.txt" en modo lectura ("r") y asigna su descriptor a fp1
