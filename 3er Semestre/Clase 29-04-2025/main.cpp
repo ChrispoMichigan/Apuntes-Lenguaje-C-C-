@@ -9,6 +9,24 @@ typedef struct {
     int precio;
 }Compra;
 
+bool buscarDuplicado(char productoBuscado[15]) {
+    FILE *fp;
+    Compra compra;
+    char filemame[20] = "compras.txt";
+    fp = fopen(filemame, "rb");
+    if (fp == NULL){
+        printf("El archivo no existe\n");
+        return false;
+    }
+    while (fread(&compra, sizeof(Compra), 1, fp)) {
+        if (strcmp(compra.producto, productoBuscado) == 0) {
+            fclose(fp);
+            return true;
+        }
+    }
+    fclose(fp);
+    return false;
+}
 
 int generarID(){
     int id = 0;
@@ -40,10 +58,18 @@ void agregarCompra() {
         system("pause");
         return;
     }
-    printf("ID generado: %d\n", generarID());
+    printf("ID generado: %05d\n", generarID());
     compra.id = generarID();
     printf("Ingrese el nombre del producto: ");
-    scanf("%s", compra.producto);
+    char productoBuscado[15];
+    scanf("%s", productoBuscado);
+    if (buscarDuplicado(productoBuscado)) {
+        printf("El producto ya existe\n");
+        fclose(fp);
+        system("pause");
+        return;
+    }
+    strcpy(compra.producto, productoBuscado);
     printf("Ingrese el precio del producto: ");
     scanf("%d", &compra.precio);
 
