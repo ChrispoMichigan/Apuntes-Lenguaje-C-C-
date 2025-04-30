@@ -9,6 +9,57 @@ typedef struct {
     int precio;
 }Compra;
 
+void borrarCompra() {
+    FILE *fp, *temp;
+    Compra compra;
+    char filemame[20] = "compras.txt";
+    char tempFile[20] = "temp.txt";
+    bool encontrado = false;
+    
+    fp = fopen(filemame, "rb");
+    if (fp == NULL) {
+        printf("El archivo no existe\n");
+        system("pause");
+        return;
+    }
+    
+    temp = fopen(tempFile, "wb");
+    if (temp == NULL) {
+        printf("Error al crear archivo temporal\n");
+        fclose(fp);
+        system("pause");
+        return;
+    }
+    
+    int id;
+    printf("Ingrese el ID de la compra a borrar: ");
+    scanf("%d", &id);
+    
+    while (fread(&compra, sizeof(Compra), 1, fp)) {
+        if (compra.id == id) {
+            encontrado = true;
+            printf("Compra encontrada y eliminada:\n");
+            printf("ID: %05d, Producto: %s, Precio: %d\n", compra.id, compra.producto, compra.precio);
+        } else {
+            fwrite(&compra, sizeof(Compra), 1, temp);
+        }
+    }
+    
+    fclose(fp);
+    fclose(temp);
+    
+    if (encontrado) {
+        remove(filemame);
+        rename(tempFile, filemame);
+        printf("Registro eliminado correctamente\n");
+    } else {
+        remove(tempFile);
+        printf("Compra no encontrada\n");
+    }
+    
+    system("pause");
+}
+
 bool buscarDuplicado(char productoBuscado[15]) {
     FILE *fp;
     Compra compra;
@@ -157,7 +208,8 @@ int main(){
         printf("1. Agregar compra\n");
         printf("2. Mostrar compras\n");
         printf("3. Buscar compra\n");
-        printf("4. Salir\n");
+        printf("4. Borrar compra\n");
+        printf("5. Salir\n");
         int op;
         scanf("%d", &op);
         switch (op) {
@@ -171,6 +223,9 @@ int main(){
                 buscarCompra();
                 break;
             case 4:
+                borrarCompra();
+                break;
+            case 5:
                 return 0;
             default:
                 printf("Opción no válida\n");
